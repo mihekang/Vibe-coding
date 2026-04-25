@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Maze Game</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+        }
+        canvas {
+            border: 2px solid black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Maze Game</h2>
+<p>Use arrow keys to move</p>
+
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const size = 40;
+
+const maze = [
+    [0,0,0,1,0,0,0,0,0,0],
+    [1,1,0,1,0,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,0,1,0],
+    [0,0,0,0,0,0,1,0,0,0],
+    [0,1,1,1,1,0,1,1,1,0],
+    [0,0,0,0,1,0,0,0,0,0],
+    [1,1,1,0,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,0,0,0]
+];
+
+let player = {x: 0, y: 0};
+let goal = {x: 9, y: 9};
+
+function drawMaze() {
+    for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+            if (maze[y][x] === 1) {
+                ctx.fillStyle = "black";
+            } else {
+                ctx.fillStyle = "white";
+            }
+            ctx.fillRect(x * size, y * size, size, size);
+            ctx.strokeRect(x * size, y * size, size, size);
+        }
+    }
+}
+
+function drawPlayer() {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(player.x * size, player.y * size, size, size);
+}
+
+function drawGoal() {
+    ctx.fillStyle = "green";
+    ctx.fillRect(goal.x * size, goal.y * size, size, size);
+}
+
+function draw() {
+    drawMaze();
+    drawGoal();
+    drawPlayer();
+}
+
+document.addEventListener("keydown", function(e) {
+    let newX = player.x;
+    let newY = player.y;
+
+    if (e.key === "ArrowUp") newY--;
+    if (e.key === "ArrowDown") newY++;
+    if (e.key === "ArrowLeft") newX--;
+    if (e.key === "ArrowRight") newX++;
+
+    if (
+        newX >= 0 && newX < 10 &&
+        newY >= 0 && newY < 10 &&
+        maze[newY][newX] === 0
+    ) {
+        player.x = newX;
+        player.y = newY;
+    }
+
+    if (player.x === goal.x && player.y === goal.y) {
+        alert("You Win!");
+        player = {x: 0, y: 0};
+    }
+
+    draw();
+});
+
+draw();
+</script>
+
+</body>
+</html>
